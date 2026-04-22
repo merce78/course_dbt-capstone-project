@@ -217,4 +217,6 @@ dbt_internal_packages/
 package-lock.yml
 logs/
 
-/airstats
+uv.lock
+airstats/profiles.yml
+uv.lock
