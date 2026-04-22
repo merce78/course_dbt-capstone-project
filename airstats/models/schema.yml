@@ -1,0 +1,52 @@
+models:
+  - name: src_airports
+    description: The src_airports model extracts and transforms raw airport data from the AIRSTATS.raw.airports table. It renames columns to more descriptive names, including airport_ident, airport_type, airport_name, airport_lat, airport_long, continent, iso_country, and iso_region, to improve clarity and usability for downstream analysis.
+    columns:
+      - name: airport_ident
+        data_type: varchar
+      - name: airport_type
+        data_type: varchar
+      - name: airport_name
+        data_type: varchar
+      - name: airport_lat
+        data_type: float
+      - name: airport_long
+        data_type: float
+      - name: continent
+        data_type: varchar
+      - name: iso_country
+        data_type: varchar
+      - name: iso_region
+        data_type: varchar
+  - name: src_airport_comments
+    description: The src_airport_comments model processes raw airport comments data by renaming and selecting specific columns. It provides a cleaned and structured representation of airport comments, including details such as comment ID, airport identifier, timestamp, member nickname, subject, and body.
+    columns:
+      - name: comment_id
+        data_type: number
+      - name: airport_ident
+        data_type: varchar
+      - name: comment_timestamp
+        data_type: timestamp_ntz
+      - name: member_nickname
+        data_type: varchar
+      - name: comment_subject
+        data_type: varchar
+      - name: comment_body
+        data_type: varchar
+  - name: src_runways
+    description: The src_runways model processes raw runway data from the AIRSTATS source, renaming and restructuring columns for better usability. It includes details such as runway ID, associated airport identifier, dimensions (length and width in feet), surface type, and status indicators for lighting and closure.
+    columns:
+      - name: runway_id
+        data_type: number
+      - name: airport_ident
+        data_type: varchar
+      - name: runway_length_ft
+        data_type: number
+      - name: runway_width_ft
+        data_type: number
+      - name: runway_surface
+        data_type: varchar
+      - name: runway_lighted
+        data_type: number
+      - name: runway_closed
+        data_type: number

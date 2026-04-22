@@ -1,0 +1,30 @@
+sources:
+  - name: airstats
+    schema: raw
+    tables: 
+      - name: airports
+        description: Global airport data (~72K rows)
+        columns:
+          - name: id
+          - name: ident
+          - name: type
+          - name: name
+          - name: iso_country
+      - name: comments
+        identifier: airport_comments
+        description: User comments about airports
+        columns: 
+          - name: id
+          - name: airport_ref
+          - name: airport_ident
+          - name: date
+      - name: runways
+        description: Runway information (~44K rows)
+        columns: 
+          - name: id
+          - name: airport_ref
+          - name: airport_ident
+          - name: closed        	
+
+
+

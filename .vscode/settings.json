@@ -1,0 +1,3 @@
+{
+    "dbt.dbtPythonPathOverride": "/home/merce/code/dbt_train/udemy-bootcam-zero-to-hero/course_dbt-capstone-project/.venv/bin/python3"
+}
