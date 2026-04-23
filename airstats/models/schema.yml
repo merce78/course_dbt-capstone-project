@@ -25,6 +25,7 @@ models:
         data_type: number
       - name: airport_ident
         data_type: varchar
+        description: The unique identifier for an airport, typically represented by its ICAO or FAA code.
       - name: comment_timestamp
         data_type: timestamp_ntz
       - name: member_nickname
