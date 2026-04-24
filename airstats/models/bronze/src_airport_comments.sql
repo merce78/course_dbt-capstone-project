@@ -1,3 +1,10 @@
+{{
+  config(
+    materialized = 'ephemeral',
+    )
+}}
+
+
 with raw_comments as (
         select * from {{ source('airstats', 'comments') }}
   ),

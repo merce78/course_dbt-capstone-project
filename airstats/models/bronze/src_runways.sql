@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized = 'ephemeral',
+    )
+}}
+
 with raw_runways as (
         select * from {{ source('airstats', 'runways') }}
   ),
