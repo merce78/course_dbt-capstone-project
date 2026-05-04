@@ -20,5 +20,5 @@ select
     current_timestamp() as loaded_at
 from comments c
 {% if is_incremental() %}
-  where comment_id >= (select max(comment_id) from {{ this }})
+  where comment_id > (select max(comment_id) from {{ this }})
 {% endif %}
