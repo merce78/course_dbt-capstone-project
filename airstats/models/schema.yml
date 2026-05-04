@@ -51,3 +51,127 @@ models:
         data_type: number
       - name: runway_closed
         data_type: number
+  - name: silver_airport_comments
+    columns:
+      - name: comment_id
+        data_type: number
+        data_tests:
+          - unique
+          - not_null
+        description: A unique identifier for each comment in the airport comments dataset.
+      - name: airport_ident
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              field: AIRPORT_IDENT
+              to: ref('silver_airports')
+              config:
+                severity: warn
+        description: The unique identifier for the airport associated with the comment. Typically corresponds to the airport's ICAO code.
+      - name: comment_timestamp
+        data_type: timestamp_ntz
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:
+                column_type: timestamp_ntz
+        description: The timestamp indicating when the comment was made, sourced from the 'DATE' field in the raw data.
+      - name: member_nickname
+        data_type: varchar
+        data_tests:
+          - not_null
+        description: The nickname of the member who posted the comment. If the nickname is not provided, it defaults to '__UNKNOWN__'.
+      - name: comment_subject
+        data_type: varchar
+        description: The subject or title of the comment provided by the user, summarizing the main topic or focus of the comment.
+      - name: comment_body
+        data_type: varchar
+        description: The main content of the comment provided by a user regarding an airport. This field contains the textual body of the comment and excludes any null values.
+      - name: loaded_at
+        data_type: timestamp_ltz
+        description: The timestamp indicating when the data was loaded into the silver_airport_comments model.
+    description: The silver_airport_comments model processes raw airport comments data by renaming columns, filtering out rows with null comment bodies, and enriching the data with a default value for missing member nicknames and a timestamp indicating when the data was loaded. This model serves as a cleaned and standardized intermediate layer for airport comments data.
+  - name: silver_runways
+    columns:
+      - name: runway_id
+        data_type: number
+        data_tests:
+          - not_null
+          - unique
+        description: A unique identifier for each runway, sourced from the raw data.
+      - name: airport_ident
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              field: AIRPORT_IDENT
+              to: ref('silver_airports')
+              config:
+                severity: warn
+        description: A unique identifier for the airport associated with the runway. Typically corresponds to the airport's code or designation.
+      - name: runway_length_ft
+        data_type: number
+        description: The length of the runway in feet, representing the total usable distance for aircraft takeoff and landing.
+      - name: runway_width_ft
+        data_type: number
+        description: The width of the runway in feet, representing the physical dimension of the runway's width.
+      - name: runway_surface
+        data_type: varchar
+        description: The material or type of surface of the runway, such as asphalt, concrete, or grass. If the surface is unknown, it defaults to '__UNKNOWN__'.
+      - name: runway_lighted
+        data_type: number
+        description: Indicates whether the runway is equipped with lighting systems. A value of 1 represents a lighted runway, while 0 represents an unlighted runway.
+      - name: runway_closed
+        data_type: number
+        description: Indicates whether the runway is closed. A value of 1 represents a closed runway, while 0 represents an open runway.
+    description: The silver_runways model processes raw runway data from the AIRSTATS source, renames columns for consistency, and applies transformations such as replacing null runway surface values with '__UNKNOWN__'. It provides cleaned and standardized information about airport runways, including their dimensions, surface type, and operational status.
+  - name: silver_airports
+    columns:
+      - name: airport_ident
+        data_type: varchar
+        data_tests:
+          - not_null
+          - unique
+        description: A unique identifier for the airport, typically represented by a code such as ICAO or FAA.
+      - name: airport_type
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              values:
+                - closed
+                - small_airport
+                - heliport
+                - large_airport
+                - balloonport
+                - seaplane_base
+                - medium_airport
+        description: Indicates the type of airport, such as small_airport, medium_airport, large_airport, heliport, or seaplane_base.
+      - name: airport_name
+        data_type: varchar
+        description: The name of the airport, typically used for identification and reference purposes.
+      - name: airport_lat
+        data_type: float
+        description: The latitude coordinate of the airport's location, represented as a floating-point number.
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -90
+                max_value: 90
+      - name: airport_long
+        data_type: float
+        description: The longitude coordinate of the airport's location, represented as a floating-point number.
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -180
+                max_value: 180
+      - name: continent
+        data_type: varchar
+        description: The continent where the airport is located, represented as a string.
+      - name: iso_country
+        data_type: varchar
+        description: The ISO 3166-1 alpha-2 code representing the country where the airport is located.
+      - name: iso_region
+        data_type: varchar
+        description: The ISO 3166-2 code representing the region or state within a country where the airport is located.
